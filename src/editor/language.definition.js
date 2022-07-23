@@ -1,6 +1,11 @@
 export const LanguageDefinition = {
   keyword: {
-    pattern: /(^|\s*)\b(TEST|TEST2)\b/,
+    pattern: /(^|\s*)\b(DEFINE|POINT|LINE|DRAFT|LAYER|AS)\b/,
     lookbehind: true,
   },
+  number: [
+    { pattern: /\d+\.\d+/, lookbehind: true },
+    { pattern: /\d+/, lookbehind: true },
+  ],
+  operator: /\+|-|\*|\//,
 };

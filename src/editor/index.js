@@ -12,7 +12,7 @@ import './theme.css';
 export const CodeEditor = () => {
   const { setAppState } = React.useContext(AppContext);
 
-  const [code, setCode] = React.useState(``);
+  const [code, setCode] = React.useState('');
 
   const debouncedCode = useDebounce(code, 500);
 

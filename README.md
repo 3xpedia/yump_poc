@@ -1,70 +1,83 @@
-# Getting Started with Create React App
+# Language specifications
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### General
 
-## Available Scripts
+- Each line represents an instruction
+- There is no end-line character
+- There is no way (currently) to write an instruction on multiple line, or to write multiple instruction per line
+- All keywords are expressed all-caps
+- One line comment are expressed with `// comment`
 
-In the project directory, you can run:
+### Reserved keywords
 
-### `npm start`
+- DEFINE
+- POINT
+- LINE
+- DRAFT
+- LAYER
+- AS
+- USE
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Variables
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- All user defined values (aka. variables) are expressed lower-case and cammel-case (eg. `variable_test`)
+- They can only contain lower-case alphabetic characters, number digits and _
+- They cannot start with a number digit
+- There is one primitive variable type : `number`
+- There are multiple complex variable type : `point`, `line` and `layer`
+- A variable can be defined with the keywords `DEFINE ... AS` (eg. `DEFINE my_variable AS 12`)
+- Primitive variables are actually constants, when defined they cannot be changed anymore
+- There cannot be duplicate variable name
 
-### `npm test`
+### Numbers and operators
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- A number is noted with point decimal separator (eg. `12`, `17.5`)
+- Available operators are `+`, `-`, `*` and `/`
+- The notation `[xxx, yyy]` let you define a "tuple" which is a set of two values, usually used to define points or lines
 
-### `npm run build`
+### Points notation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Coordinates are expressed as standard cartesian plane, having as origin the top left corner
+- A point is expressed as a tuple of coordinate (eg. `[12, 14]`, `[11.6, 12.3]`)
+- A point has two read-only properties : `x` and `y`
+- A point always belong to a layer
+- A point can be assigned to a variable for later reuse
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Lines notation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- A line is expressed as a tuple of points (eg. `[point_1, point_2]`, `[point_1, [12, 45]]`)
+- A line has two read-only properties : `p1` and `p2` being the points of the line, in the defined order
 
-### `npm run eject`
+Examples :
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+    // Draw an anonymous point at origin
+    DEFINE POINT AS [0,0]
+    
+    // Draw a named point
+    DEFINE POINT point_1 AS [20, 20]
+    
+    // Draw a point at x = 15.6 and y = 12.3
+    DEFINE POINT point_2 AS [15.6, 12,3]
+    
+    // Draw a point at the same x coordinate as p_2
+    DEFINE POINT point_3 AS [point_2.x, 100]
+    
+    // Create a point as a x translation of p_2
+    DEFINE POINT point_4 as [point_2.x + 100, point_2.y]
+    
+    // Define a variable
+    DEFINE variable_1 AS 123
+    
+    // Define another variable reading a value from a point
+    DEFINE variable_2 AS point_2.x + 100
+    
+    // Draw a point using variables and operators
+    DEFINE POINT AS [variable_1, variable_2 + 5]
+    
+    // Draw an anonymous line
+    DEFINE LINE AS [point_2, point_3]
+    
+    // Draw a named line
+    DEFINE LINE line_1 as [point_2, [point_3.x, point_3.y + 10]]
+```
