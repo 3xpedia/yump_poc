@@ -138,10 +138,18 @@ export const Tokenizer = code => {
           value += currentChar;
           pickNextChar();
         }
+
+        if (value[value.length - 1] === '.') {
+          throwError('Unexpected dangling point after an identifier');
+        }
         // We have a variable name, and probably some property access
         const out = value.split('.');
-        tokens.push(Token(INTERPRETER_CONSTS.EXPRESSION, INTERPRETER_CONSTS.EXPRESSION, out.shift()));
-        out.forEach(v => tokens.push(Token(INTERPRETER_CONSTS.PROPERTY_ACCESS, INTERPRETER_CONSTS.PROPERTY_ACCESS, v)));
+        out.forEach((v, index) => {
+          tokens.push(Token(INTERPRETER_CONSTS.NAME, INTERPRETER_CONSTS.NAME, v));
+          if (index < out.length - 1) {
+            tokens.push(Token(INTERPRETER_CONSTS.PROPERTY_ACCESS, INTERPRETER_CONSTS.PROPERTY_ACCESS, '.'));
+          }
+        });
       } else if (currentChar === '[') {
         tokens.push(Token(INTERPRETER_CONSTS.BRACKET, INTERPRETER_CONSTS.OPENING_SQUARE_BRACKET, '['));
         pickIgnoreSpaces();
